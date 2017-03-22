@@ -74,7 +74,7 @@ while (true) {
 	}
 	if (n == 0) {sleep(1); continue;}
 	
-	if(count > 120) {	  
+	if(count > 60) {	  
 			gps_data_buffer[write_position] = 0;   
 			parseNimeaData(gps_data_buffer, write_position);
 			Resetbufer(gps_data_buffer,write_position);
@@ -100,7 +100,7 @@ int getDataStatus()
 void parseNimeaData(unsigned char * string, int size) {
 	int i;
 	char ch;
-	printf("\np=>");
+	//printf("\np=>");
 	pthread_mutex_lock(&lock);
 	for(i= 0 ; i < size ;i++)
 	{
@@ -108,7 +108,7 @@ void parseNimeaData(unsigned char * string, int size) {
 		parseA7GPSNIMEADATA(ch);
 	}
 	pthread_mutex_unlock(&lock);
-	sleep(1);
+	//sleep(1);
 }
 
 

@@ -672,14 +672,14 @@ int sendA7StatusToTCPServer(int testData)
 
 	pthread_mutex_lock(&lock);
 
-	if(gps.flagDataReady)
+	//if(gps.flagDataReady)
 		{
 		A7_longitude_str=dtostrf(gps.longitude,0,6,t_buffer11);
 		A7_latitude_str=dtostrf(gps.latitude,0,6,t_buffer22);
 		snprintf(A7_updated_time_str,sizeof(A7_updated_time_str),"%d-%d-%d",gps.UTCHour,gps.UTCMin,gps.UTCSec);
 		}
 	
-	if(gps.flagDateReady)
+	//if(gps.flagDateReady)
 		{
 		snprintf(A7_updated_date_str,sizeof(A7_updated_date_str),"%d-%d-%d",gps.UTCDay,gps.UTCMonth,gps.UTCYear);
 		}
@@ -723,7 +723,7 @@ int sendA7StatusToTCPServer(int testData)
 				//if(MapForward(A7_buf,A7_OKToken,(unsigned char*)A7_Token,2) == NULL)
 					//goto exit;
 				
-				snprintf(send_string,sizeof(send_string),"%s%s%s%s%s%s%s%s%s%s%s%s", tcp_header_str,"device_id=",A7_device_id_str,"&latitude=",A7_latitude_str,"&longitude=",A7_longitude_str,"&utcdate_stamp=",A7_updated_time_str,"&utctime_stamp=",A7_updated_time_str,tcp_body_str);
+				snprintf(send_string,sizeof(send_string),"%s%s%s%s%s%s%s%s%s%s%s%s", tcp_header_str,"device_id=",A7_device_id_str,"&latitude=",A7_latitude_str,"&longitude=",A7_longitude_str,"&utcdate_stamp=",A7_updated_date_str,"&utctime_stamp=",A7_updated_time_str,tcp_body_str);
 	
 				RS232_cputs(A7_commond_cport_nr, send_string);
 				RS232_cputs(A7_commond_cport_nr, tcp_footer_str);
