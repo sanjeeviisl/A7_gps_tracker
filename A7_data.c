@@ -46,9 +46,10 @@ char t_buffer2[10];
 char t_buffer3[10];
 char t_buffer4[10];
 char t_buffer5[10];
+#define MAX_GPS_DATA_SIZE 22400
 
 int n,write_position,readComplete;
-unsigned char gps_data_buffer[22400];
+unsigned char gps_data_buffer[MAX_GPS_DATA_SIZE];
 
 
 
@@ -63,23 +64,27 @@ n = 0;
 write_position = 0;
 readComplete = true;
 
-while (true) { 
-	  n = RS232_PollComport(A7_data_cport_nr,&buff,1 );
-	  if (n == -1) switch(errno) {
-	         case EAGAIN:  sleep(1) ;
-	            continue;
-	         default: {sleep(1) ;continue;}
-	         }
-	  if (n == 0) {sleep(1); continue;}
-	  
-	  if(count > 120) {	  
-	  		gps_data_buffer[write_position] = 0;   
-			parseNimeaData(gps_data_buffer, write_position);
-			
-	  	}
+Resetbufer(gps_data_buffer,MAX_GPS_DATA_SIZE);
 
-	  if(buff == '$') count++;
-	  gps_data_buffer[write_position++] = buff;
+while (true) { 
+	n = RS232_PollComport(A7_data_cport_nr,&buff,1 );
+	if (n == -1) switch(errno) {
+	         case EAGAIN:  sleep(1) ; continue;
+	         default: {sleep(1) ;continue;}
+	}
+	if (n == 0) {sleep(1); continue;}
+	
+	if(count > 120) {	  
+			gps_data_buffer[write_position] = 0;   
+			parseNimeaData(gps_data_buffer, write_position);
+			Resetbufer(gps_data_buffer,write_position);
+			write_position = 0;
+			
+		}
+
+	if(buff == '$') count++;
+	gps_data_buffer[write_position++] = buff;
+	if(write_position > MAX_GPS_DATA_SIZE) write_position = 0;
 		//printf("%c", buff);
 	}
 
@@ -95,14 +100,14 @@ int getDataStatus()
 void parseNimeaData(unsigned char * string, int size) {
 	int i;
 	char ch;
+	printf("\np=>");
 	pthread_mutex_lock(&lock);
 	for(i= 0 ; i < size ;i++)
 	{
-		  ch = string[i];
-		  parseA7GPSNIMEADATA(ch);
+		ch = string[i];
+		parseA7GPSNIMEADATA(ch);
 	}
 	pthread_mutex_unlock(&lock);
-	printf(".");
 	sleep(1);
 }
 
@@ -223,6 +228,7 @@ void parseDataA7GPS(void){
        // sleep(1); 
         // data ready
 //        A7_count++;
+		printf("t");
         gps.flagDataReady = true;
     }//$GPGGA
 
@@ -281,6 +287,7 @@ void parseDataA7GPS(void){
         //sleep(1); 
         // data ready
         gps.flagDateReady = true;
+		printf("d");
     }//$GPRMC
     return;
 }//parseDataSIM808GPS

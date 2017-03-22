@@ -157,22 +157,24 @@ restart:
 	RS232_cputs(A7_commond_cport_nr, gsm_power_soft_reset);
 	Resetbufer(A7_buf,sizeof(A7_buf));
 	ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
-	sleep(35);
-
+	sleep(25);
+	if (A7DataConnect() == true)
+		printf("\n Data is recoonected");
+	else
+		goto restart;
+		
 
 retry2:
 	if(!GPSA7Power(1))
 	{
 		printf("\n GPS is power ON failed !!!");
-		//goto retry2;
+		goto retry2;
 
 	}
 	else
 		{
 		printf("\n GPS is enabled!!!");
-		
 		GPSA7NIMEAData(1);
-		sleep(1);
 		return 1;
 		}
 	return 0;
@@ -498,7 +500,7 @@ int A7DataConnect() {
 	return(1);
 	exit: printf("DATA CONNECT FAILED \n ");
 		A7_dataConnected = false;
-	if(n < 2)
+	if(n < 3)
 		goto restart;
 	else
 		return(0);

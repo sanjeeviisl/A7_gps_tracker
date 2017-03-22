@@ -42,8 +42,13 @@ if(A7DataConnect())
 	//
 	if(data_found)
 		sendA7StatusToTCPServer(1);
-
-	A7DataDisconnect();
+	else
+		sendA7StatusToTCPServer(1); // for safer side
+		
+	if(send_count > 10) {
+		A7DataDisconnect();
+		send_count =0;
+		}
 	
 	SUCCESS: printf("sendGPSData SUCCESS \n");
 	
