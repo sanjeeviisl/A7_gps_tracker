@@ -151,7 +151,7 @@ void parseDataA7GPS(void){
         if (gps.words[6][0] == '0') {
 			no_data_count++;
             // clear data
-			if(no_data_count > 120)
+			if(no_data_count > 0)
 				{
 				no_data_count = 0;
 	            gps.positionFixIndicator = false;

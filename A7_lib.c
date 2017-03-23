@@ -654,10 +654,10 @@ int sendA7StatusToTCPServer(int testData)
 	if(testData)
 	{
 	//test data should be comment after real data
-	A7_longitude_str=dtostrf(88.8888888,0,6,t_buffer11);
-	A7_latitude_str=dtostrf(88.8888888,0,6,t_buffer22);
-	strncpy(A7_updated_date_str,"31-01-17",8);
-	strncpy(A7_updated_time_str,"10-10-10",8);
+	A7_longitude_str=dtostrf(00.0000000,0,6,t_buffer11);
+	A7_latitude_str=dtostrf(00.0000000,0,6,t_buffer22);
+	strcpy(A7_updated_date_str,"00-00-00");
+	strcpy(A7_updated_time_str,"00-00-00");
 	A7_updated_time_str[9]= 0;
 	A7_updated_date_str[9] =0 ;
 	}
