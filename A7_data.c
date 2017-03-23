@@ -51,14 +51,15 @@ char t_buffer5[10];
 int n,write_position,readComplete;
 unsigned char gps_data_buffer[MAX_GPS_DATA_SIZE];
 
+int count = 0 ;
+unsigned char buff;
+int no_data_count = 0 ;
 
 
 int charToInt(char c){ return (c - 48);}
 double trunc(double d){ return (d>0) ? floor(d) : ceil(d) ; }
 
 int receiveA7GPSData() {
-int count = 0 ;
-unsigned char buff;
 
 n = 0;
 write_position = 0;
@@ -74,12 +75,12 @@ while (true) {
 	}
 	if (n == 0) {sleep(1); continue;}
 	
-	if(count > 60) {	  
+	if(count > 30) {	  
 			gps_data_buffer[write_position] = 0;   
 			parseNimeaData(gps_data_buffer, write_position);
 			Resetbufer(gps_data_buffer,write_position);
 			write_position = 0;
-			
+			count = 0;
 		}
 
 	if(buff == '$') count++;
@@ -148,15 +149,24 @@ void parseDataA7GPS(void){
 
         // Check GPS Fix: 0=no fix, 1=GPS fix, 2=Dif. GPS fix
         if (gps.words[6][0] == '0') {
-            gps.positionFixIndicator = false;
+			no_data_count++;
             // clear data
-//            gps.res_fLatitude = 0;
-//            gps.res_fLongitude = 0;
-            gps.flagDataReady = false;
+			if(no_data_count > 120)
+				{
+				no_data_count = 0;
+	            gps.positionFixIndicator = false;
+	            gps.flagDataReady = false;
+				gps.UTCHour = 0;
+				gps.UTCMin = 0;
+				gps.UTCSec = 0;
+				gps.longitude = 0;
+				gps.latitude = 0;
+				}
            // printf("\nNo Valid Data");
             return;
         }
-        
+
+		no_data_count = 0;        
         gps.positionFixIndicator = true;
         // parse time
         gps.UTCHour = charToInt(gps.words[1][0]) * 10 + charToInt(gps.words[1][1]);
@@ -204,16 +214,9 @@ void parseDataA7GPS(void){
         minutes = gps.longitude - (degrees * 100.0f);
         gps.longitude = degrees + minutes / 60.0f;
 
-
-//        A7_longitude_str=dtostrf(gps.longitude,0,6,t_buffer1);
-//        A7_latitude_str=dtostrf(gps.latitude,0,6,t_buffer2);
-
-
 		strncpy(gps.time,gps.words[1],6);
 		gps.time[7]=0;
 		
-//		A7_updated_time_str[7]= 0;
-
         // parse number of satellites
         gps.satellitesUsed = (int)strtof(gps.words[7], NULL);
         
@@ -227,7 +230,6 @@ void parseDataA7GPS(void){
         //printf("\n Time: %d.%d.%d ",gps.UTCHour,gps.UTCMin,gps.UTCSec);
        // sleep(1); 
         // data ready
-//        A7_count++;
 		printf("t");
         gps.flagDataReady = true;
     }//$GPGGA
@@ -258,21 +260,19 @@ void parseDataA7GPS(void){
         if (gps.words[2][0] == 'V') {
             gps.dataValid = false;
             // clear data
-//            gps.res_fLatitude = 0;
-//            gps.res_fLongitude = 0;
             gps.flagDateReady = false;
+			//gps.UTCYear= 0;
+			//gps.UTCMonth= 0;
+			//gps.UTCDay= 0;
     //        printf("\nNo Valid signal");
             return;
         }
         gps.dataValid = true;
 
         gps.speed = strtof(gps.words[7], NULL);
-//        gps.speed *= 1.15078; // convert to mph
         // parse bearing
         gps.bearing = strtof(gps.words[8], NULL);
 
-//		strncpy(A7_updated_date_str,gps.words[9],6);
-//		A7_updated_date_str[7]=0;
 		
         // parse UTC date
         gps.UTCDay = charToInt(gps.words[9][0]) * 10 + charToInt(gps.words[9][1]);

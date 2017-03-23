@@ -516,10 +516,9 @@ int sendA7DataToTCPServer(char * device_id,char * longitude,char * latitude,char
 
 char send_string[ 1024 ];
 
-char tcp_string1[]= "at+cipstatus\r\n";
-char tcp_string2[]= "AT+CIPSTART=\"TCP\",\"www.iisl.co.in\",80\r\n";
-char tcp_string3[]= "at+cipstatus\r\n";
-char tcp_string4[]= "AT+CIPSEND\r\n";	
+char tcp_status[]= "at+cipstatus\r\n";
+char tcp_start[]= "AT+CIPSTART=\"TCP\",\"www.iisl.co.in\",80\r\n";
+char tcp_send[]= "AT+CIPSEND\r\n";	
 
 char tcp_header_str1[] = "GET /adddevicelocation.php?";	
 char tcp_header_str[] = "GET /gps_control_panel/gps_mapview/adddevicelocation.php?";	
@@ -543,7 +542,7 @@ Resetbufer(send_string,1024);
 
 restart:
 
-		    RS232_cputs(A7_commond_cport_nr, tcp_string1);
+		    RS232_cputs(A7_commond_cport_nr, tcp_status);
 			sleep(1);
 		    Resetbufer(A7_buf,sizeof(A7_buf));
 		    ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
@@ -551,7 +550,7 @@ restart:
 		    //if(MapForward(A7_buf,A7_OKToken,(unsigned char*)A7_OKToken,2) == NULL)
 		      //  goto exit;
 
-		    RS232_cputs(A7_commond_cport_nr, tcp_string2);
+		    RS232_cputs(A7_commond_cport_nr, tcp_start);
 			sleep(10);		
 		    Resetbufer(A7_buf,sizeof(A7_buf));
 		    ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
@@ -560,14 +559,8 @@ restart:
 		      //  goto exit;
 
 
-		    RS232_cputs(A7_commond_cport_nr, tcp_string3);
-		    Resetbufer(A7_buf,sizeof(A7_buf));
-		    ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
-		    // Check if "OK" string is present in the received data 
-		    //if(MapForward(A7_buf,A7_OKToken,(unsigned char*)A7_OKToken,2) == NULL)
-		      //  goto exit;
 			
-			RS232_cputs(A7_commond_cport_nr, tcp_string4);
+			RS232_cputs(A7_commond_cport_nr, tcp_start);
 			sleep(4);		
 			Resetbufer(A7_buf,sizeof(A7_buf));
 			ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
@@ -631,10 +624,9 @@ int sendA7StatusToTCPServer(int testData)
 	char send_string[ 1024 ];
 	
 	
-	char tcp_string1[]= "at+cipstatus\r\n";
-	char tcp_string2[]= "AT+CIPSTART=\"TCP\",\"www.iisl.co.in\",80\r\n";
-	char tcp_string3[]= "at+cipstatus\r\n";
-	char tcp_string4[]= "AT+CIPSEND\r\n";	
+	char tcp_status[]= "at+cipstatus\r\n";
+	char tcp_start[]= "AT+CIPSTART=\"TCP\",\"www.iisl.co.in\",80\r\n";
+	char tcp_send[]= "AT+CIPSEND\r\n";	
 	
 	char tcp_header_str1[] = "GET /adddevicelocation.php?"; 
 	char tcp_header_str[] = "GET /gps_control_panel/gps_mapview/adddevicelocation.php?";	
@@ -648,8 +640,8 @@ int sendA7StatusToTCPServer(int testData)
 	char tcp_string_end[1];
 	char tcp_string_end1[]= "\r\n";
 	
-	char tcp_string20[]= "AT+CIPCLOSE\r\n";
-	char tcp_string21[]= "at+cifsr\r\n";
+	char tcp_close[]= "AT+CIPCLOSE\r\n";
+	char tcp_ipaddress[]= "at+cifsr\r\n";
 	
 	
 	tcp_string_end[0] = end_of_file_byte;
@@ -672,14 +664,14 @@ int sendA7StatusToTCPServer(int testData)
 
 	pthread_mutex_lock(&lock);
 
-	//if(gps.flagDataReady)
+	if(gps.flagDataReady)
 		{
 		A7_longitude_str=dtostrf(gps.longitude,0,6,t_buffer11);
 		A7_latitude_str=dtostrf(gps.latitude,0,6,t_buffer22);
 		snprintf(A7_updated_time_str,sizeof(A7_updated_time_str),"%d-%d-%d",gps.UTCHour,gps.UTCMin,gps.UTCSec);
 		}
 	
-	//if(gps.flagDateReady)
+	if(gps.flagDateReady)
 		{
 		snprintf(A7_updated_date_str,sizeof(A7_updated_date_str),"%d-%d-%d",gps.UTCDay,gps.UTCMonth,gps.UTCYear);
 		}
@@ -691,7 +683,7 @@ int sendA7StatusToTCPServer(int testData)
 	
 				Resetbufer(send_string,1024);
 	
-				RS232_cputs(A7_commond_cport_nr, tcp_string1);
+				RS232_cputs(A7_commond_cport_nr, tcp_status);
 				sleep(1);
 				Resetbufer(A7_buf,sizeof(A7_buf));
 				ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
@@ -699,7 +691,7 @@ int sendA7StatusToTCPServer(int testData)
 				//if(MapForward(A7_buf,A7_OKToken,(unsigned char*)A7_OKToken,2) == NULL)
 				  //  goto exit;
 	
-				RS232_cputs(A7_commond_cport_nr, tcp_string2);
+				RS232_cputs(A7_commond_cport_nr, tcp_start);
 				sleep(10);		
 				Resetbufer(A7_buf,sizeof(A7_buf));
 				ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
@@ -708,14 +700,8 @@ int sendA7StatusToTCPServer(int testData)
 				  //  goto exit;
 	
 	
-				//RS232_cputs(A7_commond_cport_nr, tcp_string3);
-				//Resetbufer(A7_buf,sizeof(A7_buf));
-				//ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
-				// Check if "OK" string is present in the received data 
-				//if(MapForward(A7_buf,A7_OKToken,(unsigned char*)A7_OKToken,2) == NULL)
-				  //  goto exit;
 				
-				RS232_cputs(A7_commond_cport_nr, tcp_string4);
+				RS232_cputs(A7_commond_cport_nr, tcp_send);
 				sleep(4);		
 				Resetbufer(A7_buf,sizeof(A7_buf));
 				ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
@@ -738,7 +724,7 @@ int sendA7StatusToTCPServer(int testData)
 				  //  goto exit;
 	
 	
-				RS232_cputs(A7_commond_cport_nr, tcp_string20);
+				RS232_cputs(A7_commond_cport_nr, tcp_close);
 				Resetbufer(A7_buf,sizeof(A7_buf));
 				ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
 				// Check if "OK" string is present in the received data 
@@ -746,9 +732,9 @@ int sendA7StatusToTCPServer(int testData)
 				//	  goto exit;
 				sleep(1);
 				
-				RS232_cputs(A7_commond_cport_nr, tcp_string21);
-				Resetbufer(A7_buf,sizeof(A7_buf));
-				ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
+				//RS232_cputs(A7_commond_cport_nr, tcp_ipaddress);
+				//Resetbufer(A7_buf,sizeof(A7_buf));
+				//ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
 				// Check if "OK" string is present in the received data 
 				//if(MapForward(A7_buf,A7_OKToken,(unsigned char*)A7_OKToken,2) == NULL)
 				//	   goto exit;

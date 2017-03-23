@@ -29,7 +29,10 @@ void* gpsA7DataReceiverTask(void *arg)
     unsigned long i = 0;
     pthread_t id = pthread_self();
 
-	
+restart:
+	GPSA7Power(0);
+	GPSA7NIMEAData(0);
+	sleep(1);
 	GPSA7Power(1);
 	GPSA7NIMEAData(1);
 	
@@ -43,13 +46,13 @@ void* gpsA7DataReceiverTask(void *arg)
     if(pthread_equal(id,tid[0]))
     {
 	//	 printf("\n Receiver  thread processing\n");
-		 restart:
+
 		  if(!receiveA7GPSData())
 			 {
 			 i++;
 			 printf("\n ReceiveData Not OK, so resetting the module");
-			 startRecoveryForA7ReceiveDataFailed(0);
-			 sleep(1*i);
+			// startRecoveryForA7ReceiveDataFailed(0);
+			// sleep(10);
 			 goto restart;
 			 }
 			  
@@ -116,8 +119,6 @@ int A7_main()
 	A7_GPSPowerON = 0;
 	A7_httpInitialize = 0;
 	A7_dataConnected = 0;
-	GPSA7Power(0);
-	GPSA7NIMEAData(0);
 	
 
     res = sem_init(&done_filling_list,  /* pointer to semaphore */
