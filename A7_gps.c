@@ -45,7 +45,7 @@ if(A7DataConnect())
 	else
 		sendA7StatusToTCPServer(1); // for safer side
 		
-	if(send_count > 10) {
+	if(send_count > 1440) {
 		A7DataDisconnect();
 		send_count =0;
 		}
