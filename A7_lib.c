@@ -56,6 +56,12 @@ int A7_buf_SIZE=sizeof(A7_buf);
 char  A7_updated_time_str[12];
 char  A7_updated_date_str[12];
 
+char  A7_gps_data_str[6];
+char  A7_device_status_str[6];
+char  A7_engine_status_str[6];
+char  A7_vehicle_status_str[6];
+
+
 static unsigned char * MapForward (unsigned char *pMapData, unsigned short   MapDataLength,
 unsigned char *pMapPoints, unsigned short   MapPointsLength )
 {
@@ -515,6 +521,8 @@ int A7DataConnect() {
 
 char t_buffer11[10];
 char t_buffer22[10];
+char t_buffer33[10];
+char t_buffer44[10];
 
 int sendA7DataToTCPServer(char * device_id,char * longitude,char * latitude,char * updated_time,char * updated_date)
 {
@@ -625,6 +633,8 @@ int sendA7StatusToTCPServer(int testData)
 	
 	char * A7_latitude_str;
 	char * A7_longitude_str;
+	char * A7_speed_str;
+	char * A7_bearing_str;
 	
 	char send_string[ 1024 ];
 	
@@ -660,24 +670,33 @@ int sendA7StatusToTCPServer(int testData)
 	{
 	//test data should be comment after real data
 	A7_longitude_str=dtostrf(00.0000000,0,6,t_buffer11);
-	A7_latitude_str=dtostrf(00.0000000,0,6,t_buffer22);
+	A7_latitude_str=dtostrf(00.0000000,0,6,t_buffer22);	
+	A7_speed_str=dtostrf(00.0000000,0,6,t_buffer33);
+	A7_bearing_str=dtostrf(00.0000000,0,6,t_buffer44);
 	strcpy(A7_updated_date_str,"00-00-00");
 	strcpy(A7_updated_time_str,"00-00-00");
-	A7_updated_time_str[9]= 0;
-	A7_updated_date_str[9] =0 ;
+	
+	strcpy(A7_gps_data_str,"OFF");
+	strcpy(A7_device_status_str,"ON");
+	strcpy(A7_engine_status_str,"ON");
+	strcpy(A7_vehicle_status_str,"READY");
+
 	}
 
 	pthread_mutex_lock(&lock);
 
 	if(gps.flagDataReady)
 		{
+		strcpy(A7_gps_data_str,"ON");
 		A7_longitude_str=dtostrf(gps.longitude,0,6,t_buffer11);
 		A7_latitude_str=dtostrf(gps.latitude,0,6,t_buffer22);
 		snprintf(A7_updated_time_str,sizeof(A7_updated_time_str),"%d-%d-%d",gps.UTCHour,gps.UTCMin,gps.UTCSec);
 		}
 	
 	if(gps.flagDateReady)
-		{
+		{		
+		A7_speed_str=dtostrf(gps.longitude,0,6,t_buffer33);
+		A7_bearing_str=dtostrf(gps.latitude,0,6,t_buffer44);
 		snprintf(A7_updated_date_str,sizeof(A7_updated_date_str),"%d-%d-%d",gps.UTCDay,gps.UTCMonth,gps.UTCYear);
 		}
 
@@ -714,7 +733,12 @@ int sendA7StatusToTCPServer(int testData)
 				//if(MapForward(A7_buf,A7_OKToken,(unsigned char*)A7_Token,2) == NULL)
 					//goto exit;
 				
-				snprintf(send_string,sizeof(send_string),"%s%s%s%s%s%s%s%s%s%s%s%s", tcp_header_str,"device_id=",A7_device_id_str,"&latitude=",A7_latitude_str,"&longitude=",A7_longitude_str,"&utcdate_stamp=",A7_updated_date_str,"&utctime_stamp=",A7_updated_time_str,tcp_body_str);
+				//snprintf(send_string,sizeof(send_string),"%s%s%s%s%s%s%s%s%s%s%s%s", tcp_header_str,"device_id=",A7_device_id_str,"&latitude=",A7_latitude_str,"&longitude=",A7_longitude_str,"&utcdate_stamp=",A7_updated_date_str,"&utctime_stamp=",A7_updated_time_str,tcp_body_str);
+				snprintf(send_string,sizeof(send_string),"%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", tcp_header_str,"device_id=",A7_device_id_str,\
+				"&latitude=",A7_latitude_str,"&longitude=",A7_longitude_str,"&utcdate_stamp=",A7_updated_date_str,"&utctime_stamp=",A7_updated_time_str,\
+				"&speed=",A7_speed_str,"&direction=",A7_bearing_str,"&gps_data=",A7_gps_data_str,"&device_status=",A7_device_status_str,\
+				"&engine_status=",A7_engine_status_str,"&vehicle_status=",A7_vehicle_status_str,tcp_body_str);
+
 	
 				RS232_cputs(A7_commond_cport_nr, send_string);
 				RS232_cputs(A7_commond_cport_nr, tcp_footer_str);
