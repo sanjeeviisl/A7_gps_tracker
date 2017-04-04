@@ -746,7 +746,13 @@ int sendA7StatusToTCPServer(int testData)
 				//if(MapForward(A7_buf,A7_OKToken,(unsigned char*)A7_Token,2) == NULL)
 					//goto exit;
 				
-				snprintf(send_string,sizeof(send_string),"%s%s%s%s%s%s%s%s%s%s%s%s", tcp_header_str,"device_id=",A7_device_id_str,"&latitude=",A7_latitude_str,"&longitude=",A7_longitude_str,"&utcdate_stamp=",A7_updated_date_str,"&utctime_stamp=",A7_updated_time_str,tcp_body_str);
+				//snprintf(send_string,sizeof(send_string),"%s%s%s%s%s%s%s%s%s%s%s%s", tcp_header_str,"device_id=",A7_device_id_str,"&latitude=",A7_latitude_str,"&longitude=",A7_longitude_str,"&utcdate_stamp=",A7_updated_date_str,"&utctime_stamp=",A7_updated_time_str,tcp_body_str);
+				
+				snprintf(send_string,sizeof(send_string),"%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", tcp_header_str,"device_id=",A7_device_id_str,"&latitude=",A7_latitude_str,\
+				"&longitude=",A7_longitude_str,"&utcdate_stamp=",A7_updated_date_str,"&utctime_stamp=",A7_updated_time_str,\
+				"&speed=",A7_speed_str,"&direction=",A7_bearing_str,"&gps_data=",A7_gps_data_str,"&device_status=",A7_device_status_str,\
+				"&engine_status=",A7_engine_status_str,"&vehicle_status=",A7_vehicle_status_str,
+				tcp_body_str);
 				
 				/*
 				snprintf(send_string,sizeof(send_string),"%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", tcp_header_str,"device_id=",A7_device_id_str,\
