@@ -510,7 +510,10 @@ int A7DataConnect() {
 	SUCCESS: printf("DATA CONNECT SUCCESS \n");
 	return(1);
 	exit: printf("DATA CONNECT FAILED \n ");
-		A7_dataConnected = false;
+	if(A7_dataConnected)
+		return(0);
+		
+	A7_dataConnected = false;
 	if(n < 3)
 		goto restart;
 	else
@@ -534,7 +537,7 @@ char tcp_start[]= "AT+CIPSTART=\"TCP\",\"www.iisl.co.in\",80\r\n";
 char tcp_send[]= "AT+CIPSEND\r\n";	
 
 char tcp_header_str1[] = "GET /adddevicelocation.php?";	
-char tcp_header_str[] = "GET /gps_control_panel/gps_mapview/adddevicelocation.php?";	
+char tcp_header_str[] = "GET /gps_control_panel/gps_mapview/addvehiclelocation.php?";	
 char send_string1[] = "GET /adddevicelocation.php HTTP/1.1\r\n";	
 
 char tcp_body_str[] = " HTTP/1.1\r\n";
@@ -644,7 +647,8 @@ int sendA7StatusToTCPServer(int testData)
 	char tcp_send[]= "AT+CIPSEND\r\n";	
 	
 	char tcp_header_str1[] = "GET /adddevicelocation.php?"; 
-	char tcp_header_str[] = "GET /gps_control_panel/gps_mapview/adddevicelocation.php?";	
+//	char tcp_header_str[] = "GET /gps_control_panel/gps_mapview/addvehiclelocation.php?";	
+	char tcp_header_str[] = "GET /gps_control_panel/gps_mapview/addvehiclelocation.php?";
 	char send_string1[] = "GET /adddevicelocation.php HTTP/1.1\r\n";	
 	
 	char tcp_body_str[] = " HTTP/1.1\r\n";
@@ -734,6 +738,11 @@ int sendA7StatusToTCPServer(int testData)
 					//goto exit;
 				
 				//snprintf(send_string,sizeof(send_string),"%s%s%s%s%s%s%s%s%s%s%s%s", tcp_header_str,"device_id=",A7_device_id_str,"&latitude=",A7_latitude_str,"&longitude=",A7_longitude_str,"&utcdate_stamp=",A7_updated_date_str,"&utctime_stamp=",A7_updated_time_str,tcp_body_str);
+				/*snprintf(send_string,sizeof(send_string),"%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", tcp_header_str,"device_id=",A7_device_id_str,\
+				"&latitude=",A7_latitude_str,"&longitude=",A7_longitude_str,"&utcdate_stamp=",A7_updated_date_str,"&utctime_stamp=",A7_updated_time_str,\
+				"&speed=",A7_speed_str,"&direction=",A7_bearing_str,"&gps_data=",A7_gps_data_str,"&device_status=",A7_device_status_str,\
+				"&engine_status=",A7_engine_status_str,"&vehicle_status=",A7_vehicle_status_str,tcp_body_str);*/
+
 				snprintf(send_string,sizeof(send_string),"%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", tcp_header_str,"device_id=",A7_device_id_str,\
 				"&latitude=",A7_latitude_str,"&longitude=",A7_longitude_str,"&utcdate_stamp=",A7_updated_date_str,"&utctime_stamp=",A7_updated_time_str,\
 				"&speed=",A7_speed_str,"&direction=",A7_bearing_str,"&gps_data=",A7_gps_data_str,"&device_status=",A7_device_status_str,\

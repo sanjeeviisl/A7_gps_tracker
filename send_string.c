@@ -47,7 +47,7 @@ char tcp_string2[]= "AT+CIPSTART=\"TCP\",\"www.iisl.co.in\",80\r\n";
 char tcp_string3[]= "at+cipstatus\r\n";
 char tcp_string4[]= "AT+CIPSEND\r\n";	
 
-char tcp_header_str[] = "GET http://iisl.co.in/gps_control_panel/gps_mapview/adddevicelocation.php?";	
+char tcp_header_str[] = "GET http://iisl.co.in/gps_control_panel/gps_mapview/addvehiclelocation.php?";	
 
 char tcp_body_str[] = " HTTP/1.0\r\n";
 
