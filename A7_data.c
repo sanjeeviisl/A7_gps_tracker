@@ -81,6 +81,7 @@ while (true) {
 			Resetbufer(gps_data_buffer,write_position);
 			write_position = 0;
 			count = 0;
+			GPS_DATA_ON();
 		}
 
 	if(buff == '$') count++;
