@@ -46,7 +46,7 @@ if(A7DataConnect())
 		sendA7StatusToTCPServer(1); // for safer side
 		
 	SUCCESS: printf("sendGPSData SUCCESS \n");
-	
+	sleep(20);
 	return(1);
 	}
 
