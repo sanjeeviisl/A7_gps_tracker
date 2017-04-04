@@ -412,6 +412,19 @@ return(0);
 }
 
 
+int GPS_DATA_ON() {
+	char gps_power_string1[]= "AT+GPS=1\r\n";
+	char nimea_data_string1[]= "AT+GPSRD=2\r\n"; //NIMEA DATA ON
+
+	RS232_cputs(A7_commond_cport_nr, gps_power_string1);
+	sleep(1);
+
+	RS232_cputs(A7_commond_cport_nr, nimea_data_string1);
+	sleep(1);
+}
+
+
+
 int A7DataDisconnect() {
 	
 	int  n =0;	
@@ -432,10 +445,6 @@ int A7DataDisconnect() {
 	SUCCESS: printf("DATA DISCONNECT SUCCESS \n");
 	return(1);
 	exit: printf("DATA DISCONNECT FAILED \n ");
-	if(n < 3)
-		goto restart;
-	else
-		return(0);
 	
 	}
 	
@@ -452,9 +461,6 @@ int A7DataConnect() {
 
 	restart:
 
-		if(!A7_dataConnected) {
-		n++;
-		
 		RS232_cputs(A7_commond_cport_nr, data_connect_string1);
 		sleep(1);
 		Resetbufer(A7_buf,sizeof(A7_buf));
@@ -469,30 +475,33 @@ int A7DataConnect() {
 		if(MapForward(A7_buf,A7_buf_SIZE,(unsigned char*)A7_OKToken,2) == NULL)
 			goto exit;
 		sleep(1);
-	
-		RS232_cputs(A7_commond_cport_nr, data_connect_string3);
-		sleep(1);
-		Resetbufer(A7_buf,sizeof(A7_buf));
-		ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
-		if(MapForward(A7_buf,A7_buf_SIZE,(unsigned char*)A7_OKToken,2) == NULL)
-			goto exit;
-	
-		RS232_cputs(A7_commond_cport_nr, data_connect_string4);
-		sleep(4);
-		Resetbufer(A7_buf,sizeof(A7_buf));
-		ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
-		if(MapForward(A7_buf,A7_buf_SIZE,(unsigned char*)A7_OKToken,2) == NULL)
-			goto exit;
 
-	
-		RS232_cputs(A7_commond_cport_nr, data_connect_string5);
-		sleep(8);
-		Resetbufer(A7_buf,sizeof(A7_buf));
-		ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
-		if(MapForward(A7_buf,A7_buf_SIZE,(unsigned char*)A7_OKToken,2) == NULL)
-			goto exit;
+		if(!A7_dataConnected) {
+			
+			n++;
+			RS232_cputs(A7_commond_cport_nr, data_connect_string3);
+			sleep(1);
+			Resetbufer(A7_buf,sizeof(A7_buf));
+			ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
+			if(MapForward(A7_buf,A7_buf_SIZE,(unsigned char*)A7_OKToken,2) == NULL)
+				goto exit;
+		
+			RS232_cputs(A7_commond_cport_nr, data_connect_string4);
+			sleep(4);
+			Resetbufer(A7_buf,sizeof(A7_buf));
+			ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
+			if(MapForward(A7_buf,A7_buf_SIZE,(unsigned char*)A7_OKToken,2) == NULL)
+				goto exit;
 
-		A7_dataConnected = true;
+		
+			RS232_cputs(A7_commond_cport_nr, data_connect_string5);
+			sleep(8);
+			Resetbufer(A7_buf,sizeof(A7_buf));
+			ReadComport(A7_commond_cport_nr,A7_buf,6000,500000);
+			if(MapForward(A7_buf,A7_buf_SIZE,(unsigned char*)A7_OKToken,2) == NULL)
+				goto exit;
+
+			A7_dataConnected = true;
 
 		}
 	
@@ -516,8 +525,10 @@ int A7DataConnect() {
 	A7_dataConnected = false;
 	if(n < 3)
 		goto restart;
-	else
+	else{
+		A7DataDisconnect();
 		return(0);
+		}
 	
 	}
 	

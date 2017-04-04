@@ -75,12 +75,13 @@ while (true) {
 	}
 	if (n == 0) {sleep(1); continue;}
 	
-	if(count > 30) {	  
+	if(count > 10) {	  
 			gps_data_buffer[write_position] = 0;   
 			parseNimeaData(gps_data_buffer, write_position);
 			Resetbufer(gps_data_buffer,write_position);
 			write_position = 0;
 			count = 0;
+			GPS_DATA_ON();
 		}
 
 	if(buff == '$') count++;
