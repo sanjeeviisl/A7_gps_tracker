@@ -299,22 +299,6 @@ void parseA7GPSNIMEADATA(char c)
 		gps.wordIdx = 0; gps.prevIdx = 0; gps.nowIdx = 0;
 	}
 
-<<<<<<< HEAD
-while (true) { 
-  n = RS232_PollComport(A7_data_cport_nr,&buff,1 );
-  if (n == -1) switch(errno) {
-         case EAGAIN:  sleep(1) ;
-            continue;
-         default: goto quit;
-         }
-  if (n == 0) {sleep(1); continue;}
-  
-  if(buff == '$') count++;
-  if(count > 60) break;
-  gps_data_buffer[write_position++] = buff;
-  //printf("%c", buff);
-}
-=======
 	if (gps.flagRead) {
 		// check ending
 		if (c == '\r' || c== '\n') {
@@ -348,7 +332,6 @@ while (true) {
 			else gps.nowIdx++;
 		}
 	}
->>>>>>> 5a07b59be794440e2665fb998bff1d3b09fe6186
 
     return;
 }//fuseDataGPS
