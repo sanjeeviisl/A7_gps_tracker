@@ -15,10 +15,10 @@ import requests
 
   
 # defining the api-endpoint  
-API_ENDPOINT = "http://iisl.co.in/gps_control_panel/gps_mapview/addvehiclelocation.php"
+START_API_ENDPOINT = "http://iisl.co.in/system/VehicleTracker/gps_control_panel/gps_mapview/adddevicelocation.php"
   
 # your API key here 
-DEVICE_KEY = "XXXXXXXXXXXXXXXXX"
+DEVICE_KEY = "9873441502"
   
 # Listen on port 2947 (gpsd) of localhost
 session = gps.gps("localhost", "2947")
@@ -27,10 +27,10 @@ data = {'device_id': DEVICE_KEY }
 
 try:
     # sending post request and saving response as response object
-    r = requests.post(url = API_ENDPOINT, data = data)
+    r = requests.post(url =START_API_ENDPOINT, data = data)
     # extracting response text
-    pastebin_url = r.text
-    print("The pastebin URL is:%s"%pastebin_url)
+    response  = r.text
+    print("Response from server :%s"%response)
 
 except Exception as e:
     print("Error %s" % str(e))
