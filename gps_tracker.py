@@ -15,7 +15,7 @@ import requests
 
   
 # defining the api-endpoint  
-API_ENDPOINT = "http://iisl.co.in/gps_control_panel/gps_mapview/addvehiclelocation.php"
+API_ENDPOINT = "http://iisl.co.in/system/VehicleTracker/gps_control_panel/gps_mapview/adddevicelocation.php"
   
 # your API key here 
 DEVICE_KEY = "XXXXXXXXXXXXXXXXX"
@@ -62,11 +62,11 @@ while True:
                     'utcdate_stamp': gpsData['utcdate_stamp'],'utctime_stamp': gpsData['utctime_stamp'],'speed': gpsData['speed'],\
                     'direction': gpsData['direction'],'gps_data': gpsData['gps_data'],'device_status': gpsData['device_status'],\
                     'engine_status': gpsData['engine_status'],'vehicle_status': gpsData['vehicle_status']
-                else:
-                    data = {'device_id': gpsData['id'],'longitude': gpsData['longitude'],'latitude': gpsData['latitude'],\
-                    'utcdate_stamp': gpsData['utcdate_stamp'],'utctime_stamp': gpsData['utctime_stamp'],'speed': gpsData['speed'],\
-                    'direction': gpsData['direction'],'gps_data': gpsData['gps_data'],'device_status': gpsData['device_status'],\
-                    'engine_status': gpsData['engine_status'],'vehicle_status': gpsData['vehicle_status']
+                    else:
+                        data = {'device_id': gpsData['id'],'longitude': gpsData['longitude'],'latitude': gpsData['latitude'],\
+                        'utcdate_stamp': gpsData['utcdate_stamp'],'utctime_stamp': gpsData['utctime_stamp'],'speed': gpsData['speed'],\
+                        'direction': gpsData['direction'],'gps_data': gpsData['gps_data'],'device_status': gpsData['device_status'],\
+                        'engine_status': gpsData['engine_status'],'vehicle_status': gpsData['vehicle_status']
                     
                 try:	
                   
@@ -113,11 +113,11 @@ while True:
                 'utcdate_stamp': gpsData['utcdate_stamp'],'utctime_stamp': gpsData['utctime_stamp'],'speed': gpsData['speed'],\
                 'direction': gpsData['direction'],'gps_data': gpsData['gps_data'],'device_status': gpsData['device_status'],\
                 'engine_status': gpsData['engine_status'],'vehicle_status': gpsData['vehicle_status']
-            else:
-                data = {'device_id': gpsData['id'],'longitude': gpsData['longitude'],'latitude': gpsData['latitude'],\
-                'utcdate_stamp': gpsData['utcdate_stamp'],'utctime_stamp': gpsData['utctime_stamp'],'speed': gpsData['speed'],\
-                'direction': gpsData['direction'],'gps_data': gpsData['gps_data'],'device_status': gpsData['device_status'],\
-                'engine_status': gpsData['engine_status'],'vehicle_status': gpsData['vehicle_status']
+                else:
+                    data = {'device_id': gpsData['id'],'longitude': gpsData['longitude'],'latitude': gpsData['latitude'],\
+                    'utcdate_stamp': gpsData['utcdate_stamp'],'utctime_stamp': gpsData['utctime_stamp'],'speed': gpsData['speed'],\
+                    'direction': gpsData['direction'],'gps_data': gpsData['gps_data'],'device_status': gpsData['device_status'],\
+                    'engine_status': gpsData['engine_status'],'vehicle_status': gpsData['vehicle_status']
                 
             try:	
                 # sending post request and saving response as response object 

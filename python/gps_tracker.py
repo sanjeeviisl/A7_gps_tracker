@@ -13,17 +13,12 @@ import requests
 ####!/bin/bash 
 ####sudo gpsd /dev/ttyS2 -F /var/run/gpsd.sock
 
-  
 # defining the api-endpoint  
-START_API_ENDPOINT = "http://iisl.co.in/system/VehicleTracker/gps_control_panel/gps_mapview/adddevicelocation.php"
+START_API_ENDPOINT = "http://iisl.co.in/system/VehicleTracker/gps_control_panel/gps_mapview/checkserver.php"
+UPDATE_API_ENDPOINT = "http://iisl.co.in/system/VehicleTracker/gps_control_panel/gps_mapview/checkserver.php"
   
 # your API key here 
 DEVICE_KEY = "9873441502"
-  
-# Listen on port 2947 (gpsd) of localhost
-session = gps.gps("localhost", "2947")
-session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
-data = {'device_id': DEVICE_KEY }
 
 try:
     # sending post request and saving response as response object
@@ -34,6 +29,11 @@ try:
 
 except Exception as e:
     print("Error %s" % str(e))
+
+# Listen on port 2947 (gpsd) of localhost
+session = gps.gps("localhost", "2947")
+session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
+data = {'device_id': DEVICE_KEY }
 
 while True:
     time.sleep(5) 
@@ -74,15 +74,12 @@ while True:
                    'direction': gpsData['direction'],'gps_data': gpsData['gps_data'],'device_status': gpsData['device_status'],\
                    'engine_status': gpsData['engine_status'],'vehicle_status': gpsData['vehicle_status']}
                 else :
-                   data = {'device_id': gpsData['id'],'longitude': gpsData['longitude'],'latitude': gpsData['latitude'],\
-                   'utcdate_stamp': gpsData['utcdate_stamp'],'utctime_stamp': gpsData['utctime_stamp'],'speed': gpsData['speed'],\
-                   'direction': gpsData['direction'],'gps_data': gpsData['gps_data'],'device_status': gpsData['device_status'],\
-                   'engine_status': gpsData['engine_status'],'vehicle_status': gpsData['vehicle_status']}
+                   data = {'device_id': gpsData['id'],'extra' : "No Update"}
                     
                 try:	
                   
                    # sending post request and saving response as response object 
-                   r = requests.post(url = API_ENDPOINT, data = data) 
+                   r = requests.post(url = UPDATE_API_ENDPOINT, data = data) 
                     # extracting response text  
                    pastebin_url = r.text 
                    print("The pastebin URL is:%s"%pastebin_url) 
