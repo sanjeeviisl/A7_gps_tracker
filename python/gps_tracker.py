@@ -11,7 +11,7 @@ import requests
 
 ### to be included
 ####!/bin/bash 
-####sudo gpsd /dev/ttyS2 -F /var/run/gpsd.sock
+####sudo gpsd /dev/ttyS1 -F /var/run/gpsd.sock
 
 # defining the api-endpoint  
 START_API_ENDPOINT = "http://iisl.co.in/system/VehicleTracker/gps_control_panel/gps_mapview/checkserver.php"
